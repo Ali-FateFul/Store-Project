@@ -9,25 +9,33 @@ import styles from "./ProductsPage.module.css";
 //Components
 import Card from "../components/Card";
 import Loader from "../components/Loader";
+import { filterProducts, searchProducts } from "../helper/helper";
 
 function ProductsPage() {
   const products = useProducts();
 
   const [displayed, setDisplayed] = useState([]);
   const [search, setSearch] = useState("");
+  const [query, setQuery] = useState({});
 
   useEffect(() => {
     setDisplayed(products);
   }, [products]);
 
+  useEffect(() => {
+    let finalProducts = searchProducts(products, query.search);
+    finalProducts = filterProducts(finalProducts, query.category);
+    setDisplayed(finalProducts);
+  }, [query]);
+
   const searchHadler = () => {
-    console.log(search);
+    setQuery((query) => ({ ...query, search }));
   };
   const categoryHandler = (e) => {
     const { tagName } = e.target;
     const category = e.target.innerText.toLowerCase();
     if (tagName !== "LI") return;
-    console.log(category);
+    setQuery((query) => ({ ...query, category }));
   };
 
   return (
