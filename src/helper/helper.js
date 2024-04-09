@@ -14,4 +14,25 @@ const filterProducts = (products , category) => {
     return filteredProducts;
 };
 
-export { shortenText , searchProducts , filterProducts };
+const createQueryObject = (currentQuery , newQuery) => {
+    if(newQuery.category === "all") {
+        const { category , ...rest } = currentQuery;
+        return rest
+    }
+    if(newQuery.search === "") {
+        const { search , ...rest } = currentQuery;
+        return rest
+    }
+    return {...currentQuery , ...newQuery}
+};
+
+const getInitialQuery = (searchParams) => {
+    const query = {};
+    const search = searchParams.get("search");
+    const category = searchParams.get("category");
+    if (category) query.category = category;
+    if (search) query.search = search;
+    return query;
+};
+
+export { shortenText , searchProducts , filterProducts , createQueryObject , getInitialQuery };
